@@ -22,6 +22,14 @@ export const API_PATHS = {
     DELETE_EXPENSE: (expenseId) =>  `/api/v1/expense/${expenseId}`,
     DOWNLOAD_EXPENSE: `/api/v1/expense/downloadexcel`,
   },
+  CALORIES: {
+    // For POST (add) and GET (get all)
+    BASE: "/api/v1/calories",
+    // For DELETE (by ID)
+    DELETE: (logId) => `/api/v1/calories/${logId}`,
+    // For today's summary
+    TODAY_SUMMARY: "/api/v1/calories/summary/today",
+  },
   IMAGE: {
     UPLOAD_IMAGE: "/api/v1/auth/upload-image",
   },

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/Layouts/DashboardLayout";
 
-import { LuHandCoins, LuWalletMinimal } from "react-icons/lu";
+import { LuHandCoins, LuWalletMinimal, LuApple } from "react-icons/lu"; // Added LuApple for calories
 import { IoMdCard } from "react-icons/io";
 
 import { useNavigate } from "react-router-dom";
@@ -23,38 +23,65 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [todayCalorieSummary, setTodayCalorieSummary] = useState({
+    totalCalories: 0,
+    totalProtein: 0,
+    totalCarbs: 0,
+    totalFats: 0,
+    logCount: 0,
+  });
+  const [loading, setLoading] = useState(false); // Combined loading state
+  const [calorieLoading, setCalorieLoading] = useState(false);
+
 
   const fetchDashboardData = async () => {
-    if (loading) return;
-
-    setLoading(true);
-
+    // setLoading(true) is now handled by the combined fetch function
     try {
-      const response = await axiosInstance.get(
-        `${API_PATHS.DASHBOARD.GET_DATA}`
-      );
-
+      const response = await axiosInstance.get(API_PATHS.DASHBOARD.GET_DATA);
       if (response.data) {
         setDashboardData(response.data);
       }
     } catch (error) {
-      console.log("Something went wrong. Please try again.", error);
-    } finally {
-      setLoading(false);
+      console.log("Error fetching dashboard data. Please try again.", error);
+      // toast.error("Could not load dashboard data.");
     }
+    // setLoading(false) is now handled by the combined fetch function
   };
 
-  useEffect(() => {
-    fetchDashboardData();
+  const fetchTodayCalorieSummary = async () => {
+    // setCalorieLoading(true) is now handled by the combined fetch function
+    try {
+      const response = await axiosInstance.get(API_PATHS.CALORIES.TODAY_SUMMARY);
+      if (response.data) {
+        setTodayCalorieSummary(response.data);
+      }
+    } catch (error) {
+      console.log("Error fetching today's calorie summary. Please try again.", error);
+      // toast.error("Could not load today's calorie summary.");
+    }
+    // setCalorieLoading(false) is now handled by the combined fetch function
+  };
+  
+  constfetchAllData = async () => {
+    if (loading || calorieLoading) return; // Prevent re-fetching if already loading
+    setLoading(true);
+    setCalorieLoading(true);
+    await Promise.all([fetchDashboardData(), fetchTodayCalorieSummary()]);
+    setLoading(false);
+    setCalorieLoading(false);
+  };
 
+
+  useEffect(() => {
+    fetchAllData();
     return () => {};
   }, []);
 
   return (
     <DashboardLayout activeMenu="Dashboard">
       <div className="my-5 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Adjusted grid to md:grid-cols-4 to accommodate the new card */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           <InfoCard
             icon={<IoMdCard />}
             label="Total Balance"
@@ -74,6 +101,13 @@ const Home = () => {
             label="Total Expenses"
             value={addThousandsSeparator(dashboardData?.totalExpenses || 0)}
             color="bg-red-500"
+          />
+          <InfoCard
+            icon={<LuApple />} // Using LuApple icon
+            label="Today's Calories"
+            value={`${addThousandsSeparator(todayCalorieSummary?.totalCalories || 0)} kcal`}
+            color="bg-green-500" // Example color
+            loading={calorieLoading}
           />
         </div>
 

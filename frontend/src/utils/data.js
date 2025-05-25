@@ -4,6 +4,7 @@ import {
   LuWalletMinimal,
   LuLogOut,
 } from "react-icons/lu";
+import { FaApple } from "react-icons/fa";
 
 
 export const SIDE_MENU_DATA = [
@@ -25,9 +26,14 @@ export const SIDE_MENU_DATA = [
     icon: LuHandCoins,
     path: "/expense",
   },
-  
   {
-    id: "06",
+    id: "04",
+    label: "Calorie Tracker",
+    icon: FaApple,
+    path: "/dashboard/calories",
+  },
+  {
+    id: "06", // ID can remain 06 or be changed to 05 if we want to keep them sequential
     label: "Logout",
     icon: LuLogOut,
     path: "logout",
