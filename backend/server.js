@@ -1,5 +1,6 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
+<<<<<<< HEAD
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -10,6 +11,18 @@ import expenseRoutes from "./routes/expenseRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 // import calorieRoutes from "./routes/calorieRoutes.js";  // Commented out as requested
 import testModuleValue from "./routes/testModule.js";    // Added as requested
+=======
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const connectDB = require("./config/db.js");
+const authRoutes = require("./routes/authRoutes.js");
+const incomeRoutes = require("./routes/incomeRoutes.js");
+const expenseRoutes = require("./routes/expenseRoutes.js");
+const dashboardRoutes = require("./routes/dashboardRoutes.js");
+const calorieRoutes = require("./routes/calorieRoutes.js");
+
+>>>>>>> ef170e2efef64c98b0e2015c735fca85ac6703b5
 
 const app = express();
 const __dirname = path.resolve();
