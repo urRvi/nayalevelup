@@ -1,41 +1,42 @@
-const express = require('express');
+// const express = require('express');
 const router = express.Router();
 const {
   addFoodLog,
   getFoodLogs,
   deleteFoodLog,
   detectFoodWithImage,
-  getTodayCalorieSummary, // Added new controller function
+  getTodayCalorieSummary,
 } = require('../controllers/calorieController');
-const { protect } = require('../middleware/authMiddleware');
-const { uploadFoodImage } = require('../middleware/uploadMiddleware'); // Correctly import the named export
 
-// All routes are protected
+const { protect } = require('../middleware/authMiddleware');
+const { uploadFoodImage } = require('../middleware/uploadMiddleware');
+
+// All routes require authentication
 router.use(protect);
 
-// @route   GET /api/calories/summary/today
-// @desc    Get today's calorie summary
-// @access  Private
-router.get('/summary/today', getTodayCalorieSummary);
-
-// @route   POST /api/calories/detect
-// @desc    Detect food from an image and log it
+// @route   POST /api/v1/calories/detect
+// @desc    Upload food image, detect items + calories
 // @access  Private
 router.post('/detect', uploadFoodImage.single('foodImage'), detectFoodWithImage);
 
-// @route   POST /api/calories
-// @desc    Add a food log entry
+// @route   POST /api/v1/calories
+// @desc    Log food manually or after detection
 // @access  Private
 router.post('/', addFoodLog);
 
-// @route   GET /api/calories
-// @desc    Get all food log entries for a user
+// @route   GET /api/v1/calories
+// @desc    Get all food logs for user
 // @access  Private
 router.get('/', getFoodLogs);
 
-// @route   DELETE /api/calories/:id
-// @desc    Delete a food log entry
+// @route   DELETE /api/v1/calories/:id
+// @desc    Delete a food log
 // @access  Private
 router.delete('/:id', deleteFoodLog);
+
+// @route   GET /api/v1/calories/summary/today
+// @desc    Get today's total calories
+// @access  Private
+router.get('/summary/today', getTodayCalorieSummary);
 
 module.exports = router;
